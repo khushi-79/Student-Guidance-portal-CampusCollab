@@ -12,13 +12,10 @@ body{
     margin-right: o;
 }
 
-.Search {
+.HomePage {
 	display: flex;
 	align-items: center;
 	width: 40%;
-	background-color: #f5f5f5;
-	border: 2px solid #a0e7f0;
-	border-radius: 6px;
 	padding: 8px;
 }
 
@@ -61,12 +58,12 @@ body{
 .middle-header > div svg {
 	width: 24px;
 	height: 24px;
-	color: #a0e7f0;
+	color:  #f95d5d;
 	transition: color 0.3s;
 }
 
 .middle-header > div svg:hover {
-	color: #80c7d8;
+	color: #f95d5d;
 }
 
 .svg-icons {
@@ -82,18 +79,18 @@ body{
 .svg-icons > div svg {
 	width: 24px;
 	height: 24px;
-	color: #a0e7f0;
+	color:  #f95d5d;
 	transition: color 0.3s;
 }
 
 .svg-icons > div svg:hover {
-	color: #80c7d8;
+	color: #ebb9b9;
 }
 
 .post-composer {
 	display: flex;
 	flex-direction: column;
-	border: 2px solid #a0e7f0;
+	border: 2px solid #ebb9b9;
 	border-radius: 8px;
 	margin-bottom: 16px;
 	background-color: #f0f5f6;
@@ -124,14 +121,14 @@ body{
 .post-composer .buttons button {
 	padding: 8px 16px;
 	margin-left: 8px;
-	border: 2px solid #a0e7f0;
+	border: 2px solid #ebb9b9;
 	border-radius: 4px;
 	cursor: pointer;
 	background-color: #f0f0f0;
 }
 
 .post-composer .buttons button:hover {
-	background-color: #a0e7f0;
+	background-color: #ebb9b9;
 	border: 1px solid #fff;
 }
 
@@ -162,12 +159,12 @@ body{
     grid-template-columns: 1fr;
     align-items: center;
     justify-items: center;
-    width: 50%;
-    max-width: 600px; 
+    width: 60%;
+    max-width: 700px; 
     margin: 29px auto; 
     padding: 20px;
     background-color: white;
-    border: 2px solid #a0e7f0;
+    border: 2px solid #ebb9b9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -201,7 +198,7 @@ body{
     font-size: 1.1rem; 
     font-weight: 500;
     word-wrap: break-word;
-    padding-left: 2%;
+    padding-left: 1%;
 }
 
 .Comment {
@@ -218,6 +215,6 @@ body{
     font-weight: 400;
     font-size: 1.2rem; 
     margin-right: 3rem; 
-	margin-left: 3rem;
+	margin-left: 2rem;
 	margin-top: 1rem;
 }

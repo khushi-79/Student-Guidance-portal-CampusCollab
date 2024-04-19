@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // Import signInWithEmailAndPassword
 import app from "../database/firebase.config"; // Assuming you have Firebase initialized in this file
-import "../components/signin_form.css";
+import "../components/Form.css";
 
 const Signin_form = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ const Signin_form = () => {
 
       // User successfully logged in
 
-      navigate("/Search");
+      navigate("/HomePage");
       // You can redirect or handle success here
     } catch (error) {
       console.error("Error signing in:", error.message);

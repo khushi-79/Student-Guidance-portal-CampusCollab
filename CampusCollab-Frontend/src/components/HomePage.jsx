@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "./search.css";
+import "./homePage.css";
 import { Link } from 'react-router-dom';
+import { useEffect } from "react";
 import { AiOutlineSearch, AiFillHome, AiOutlineWallet } from "react-icons/ai";
 import { MdOndemandVideo } from "react-icons/md";
 import {
@@ -12,16 +13,30 @@ import {
 	FaCommentAlt,
 	FaRegShareSquare,
 } from "react-icons/fa";
-import { MdMoreHoriz } from "react-icons/md";
+import { collection, addDoc,getFirestore } from "firebase/firestore";
 
-function Search() {
-	const [setSearchTerm] = useState("");
+function HomePage() {
+	// const [setSearchTerm] = useState("");
+	
 	const [text, setText] = useState("");
 	const [posts, setPosts] = useState([]);
+// 	const [displayName, setDisplayName] = useState("");
 
-	const handleSearchChange = (event) => {
-		setSearchTerm(event.target.value);
-	};
+//   useEffect(() => {
+//     const auth = getAuth();
+//     if (auth.currentUser) {
+//       // Retrieve display name of the current user
+//       const name = auth.currentUser.displayName;
+//       if (name) {
+//         setDisplayName(name);
+//       }
+//     }
+//   }, []);
+
+	// const handleSearchChange = (event) => {
+	// 	setSearchTerm(event.target.value);
+	// };
+
 
 	const handlePostChange = (event) => {
 		setText(event.target.value);
@@ -39,14 +54,22 @@ function Search() {
 		setPostType("video"); // Set post type to video
 	};
 
-	const handlePostSubmit = (event) => {
+	const handlePostSubmit = async(event) => {
 		event.preventDefault();
 		if (!text.trim()) return; // Prevent posting empty content
 		const newPost = {
 		  content: text,
 		  timestamp: new Date().toISOString(), // Add timestamp
-		  author: "Anonymous", // Add author
+		  author:"anonymous", // Add author
 		};
+
+		const db = getFirestore();
+		const userRef = collection(db, "post-details");
+		await addDoc(userRef, {
+			content: text,
+			timestamp: new Date().toISOString(), // Add timestamp
+			author: "anonymous", // Add author// Save the user ID from Firebase Authentication
+		});
 		setPosts([...posts, newPost]);
 		setText("");
 	  };
@@ -62,41 +85,25 @@ function Search() {
 							style={{ height: "50px", padding: "1rem" }}
 						/>
 					</div>
-					<div className="Search">
+					<div className="HomePage">
 						<AiOutlineSearch style={{ height: "1rem" }} />
-						<input placeholder="Search News" type="Search" />
+						<input placeholder="HomePage News" type="HomePage" />
 					</div>
 					<div className="middle-header">
-						<div className="Icon">
-							<AiFillHome fontSize="1.5rem" color="#F4C2C2" />
-						</div>
-						<div className="Icon">
-							<MdOndemandVideo fontSize="1.5rem" />
-						</div>
-						<div className="Icon">
-							<FaUsers fontSize="1.5rem" />
-						</div>
-						<div className="Icon">
-							<AiOutlineWallet fontSize="1.5rem" />
-						</div>
 					</div>
 					<div className="svg-icons">
 						<div className="plus">
 							<FaPlusCircle fontSize="1.5rem" />
 						</div>
 						<div className="plus">
-							<FaFacebookMessenger fontSize="1.5rem" />
+							<Link to="/chat">
+							<FaFacebookMessenger href=""fontSize="1.5rem" />
+							</Link>
 						</div>
 						<div className="plus">
 							<FaBell fontSize="1.5rem" />
 						</div>
-						<div className="Pluss">
-							<img
-								src="src/assets/homepage/demo-1.png"
-								alt="dp"
-								style={{ height: "40px" }}
-							/>
-						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -121,12 +128,10 @@ function Search() {
 					<button type="submit" onClick={handlePostSubmit}>
 					Post
 					</button>
-					<Link to="/chat">
-					<button type="button">Chat</button>
-					</Link>
+					
       			</div>
 			</div>
-			<div className="Posted">
+		<div className="Posted">
 			<div className="poster">
 					<div className="Simplilearn">
 						<img
@@ -163,9 +168,11 @@ function Search() {
 						Share
 					</div>
 				</div>
+			</div>
 				<br/>
 				
 				{posts.map((post, index) => (
+				<div className="Posted">
 					<div key={index} className="post">
 						<div className="poster">
 							<div className="Simplilearn">
@@ -192,14 +199,12 @@ function Search() {
 						Share
 					</div>
 				</div>
-				<br/>
-				<hr/>
-
-					</div>
+				</div>
+			</div>
 				))}
 			</div>
-		</div>
+		
 	);
 }
 
-export default Search;
+export default HomePage;
