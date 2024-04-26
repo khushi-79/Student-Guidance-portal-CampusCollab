@@ -89,21 +89,19 @@ function HomePage() {
 						<AiOutlineSearch style={{ height: "1rem" }} />
 						<input placeholder="HomePage News" type="HomePage" />
 					</div>
-					<div className="middle-header">
-					</div>
+					<div className="middle-header"></div>
 					<div className="svg-icons">
 						<div className="plus">
 							<FaPlusCircle fontSize="1.5rem" />
 						</div>
 						<div className="plus">
 							<Link to="/chat">
-							<FaFacebookMessenger href=""fontSize="1.5rem" />
+								<FaFacebookMessenger href="" fontSize="1.5rem" />
 							</Link>
 						</div>
 						<div className="plus">
 							<FaBell fontSize="1.5rem" />
 						</div>
-						
 					</div>
 				</div>
 			</div>
@@ -114,25 +112,40 @@ function HomePage() {
 					placeholder="What's on your mind?"
 				/>
 				<div className="buttons">
-					<Link to="/live-video">
-					<button type="button">LiveVideo</button>
-					</Link>
-					<button><label htmlFor="photo-upload" className="custom-file-upload">
-						<input id="photo-upload" type="file" onChange={handlePhoto} accept="image/*" style={{display: 'none'}} />
-						Photo
-					</label></button>
-					<button><label htmlFor="video-upload" className="custom-file-upload">
-						<input id="video-upload" type="file" onChange={handleVideo} accept="video/*" style={{display: 'none'}} />
-						Video
-					</label></button>
-					<button type="submit" onClick={handlePostSubmit}>
-					Post
+					<button>
+						<label htmlFor="photo-upload" className="custom-file-upload">
+							<input
+								id="photo-upload"
+								type="file"
+								onChange={handlePhoto}
+								accept="image/*"
+								style={{ display: "none" }}
+							/>
+							Photo
+						</label>
 					</button>
-					
-      			</div>
+					<button>
+						<label htmlFor="video-upload" className="custom-file-upload">
+							<input
+								id="video-upload"
+								type="file"
+								onChange={handleVideo}
+								accept="video/*"
+								style={{ display: "none" }}
+							/>
+							Video
+						</label>
+					</button>
+					<button type="submit" onClick={handlePostSubmit}>
+						Post
+					</button>
+					<Link to="/Home">
+						<button type="submit">Chat</button>
+					</Link>
+				</div>
 			</div>
-		<div className="Posted">
-			<div className="poster">
+			<div className="Posted">
+				<div className="poster">
 					<div className="Simplilearn">
 						<img
 							src="src/assets/homepage/Pink and Black Modern Initials Logo Design.png"
@@ -142,8 +155,8 @@ function HomePage() {
 						CampusCollab
 					</div>
 				</div>
-			<div className="caption">
-					Welcome to CampusCollab! 
+				<div className="caption">
+					Welcome to CampusCollab!
 					<br></br>Collaborate with us we will help you to solve your questions :)
 				</div>
 				<br></br>
@@ -169,9 +182,9 @@ function HomePage() {
 					</div>
 				</div>
 			</div>
-				<br/>
-				
-				{posts.map((post, index) => (
+			<br />
+
+			{posts.map((post, index) => (
 				<div className="Posted">
 					<div key={index} className="post">
 						<div className="poster">
@@ -186,24 +199,23 @@ function HomePage() {
 						</div>
 						<div className="caption">{post.content}</div>
 						<div className="Comment">
-					<div className="Like">
-						<FaRegThumbsUp color="grey" />
-						Like
-					</div>
-					<div className="Like">
-						<FaCommentAlt color="grey" />
-						Comment
-					</div>
-					<div className="Like">
-						<FaRegShareSquare color="grey" />
-						Share
+							<div className="Like">
+								<FaRegThumbsUp color="grey" />
+								Like
+							</div>
+							<div className="Like">
+								<FaCommentAlt color="grey" />
+								Comment
+							</div>
+							<div className="Like">
+								<FaRegShareSquare color="grey" />
+								Share
+							</div>
+						</div>
 					</div>
 				</div>
-				</div>
-			</div>
-				))}
-			</div>
-		
+			))}
+		</div>
 	);
 }
 
