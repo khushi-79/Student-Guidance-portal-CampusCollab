@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./homePage.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { AiOutlineSearch, AiFillHome, AiOutlineWallet } from "react-icons/ai";
+import { useNavigate, Link } from "react-router-dom";
 import {
   FaPlusCircle,
   FaFacebookMessenger,
   FaSignOutAlt,
-  FaBell,
-  FaUsers,
   FaRegThumbsUp,
   FaCommentAlt,
   FaRegShareSquare,
+  FaEdit,
+  FaTrash,
 } from "react-icons/fa";
 import {
   collection,
@@ -21,84 +19,119 @@ import {
   orderBy,
   getDocs,
   doc,
-  updateDoc
+  updateDoc,
+  deleteDoc,
+  increment,
 } from "firebase/firestore";
-import {
-  ref,
-  getMetadata,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-} from "firebase/storage";
-import { storage } from "../database/firebase.config"; // Import storage reference
+
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function HomePage() {
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
   const [image, setImage] = useState(null);
+  const [editedPostId, setEditedPostId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [likedPosts, setLikedPosts] = useState([]); // State to store liked posts
+  
+//   // const handleLike = async (postId, likedPosts, setLikedPosts, db) => {
+//   try {
+//     // Check if the post is already liked by the current user
+//     if (likedPosts.includes(postId)) {
+//       // If already liked, unlike the post
+//       const updatedLikedPosts = likedPosts.filter((id) => id !== postId);
+//       setLikedPosts(updatedLikedPosts);
+
+//       // Fetch the current likes count
+//       const postRef = doc(db, 'post-details', postId);
+//       const postDoc = await getDoc(postRef);
+//       const currentLikes = postDoc.data().likes || 0;
+
+//       // Decrement the likes count
+//       const updatedLikes = Math.max(currentLikes - 1, 0);
+
+//       // Update the Firestore document with the decremented value
+//       await updateDoc(postRef, { likes: updatedLikes });
+//     } else {
+//       // If not liked, like the post
+//       setLikedPosts([...likedPosts, postId]);
+
+//       // Fetch the current likes count
+//       const postRef = doc(db, 'post-details', postId);
+//       const postDoc = await getDoc(postRef);
+//       const currentLikes = postDoc.data().likes || 0;
+
+//       // Increment the likes count
+//       const updatedLikes = currentLikes + 1;
+
+//       // Update the Firestore document with the incremented value
+//       await updateDoc(postRef, { likes: updatedLikes });
+//     }
+//   } catch (error) {
+//     console.error('Error updating likes:', error);
+//   }
+// };
+
+  const handleLike = async (postId) => {
+    try {
+      // Check if the post is already liked by the current user
+      if (likedPosts.includes(postId)) {
+        alert("You've already liked this post!");
+        return;
+      }
+  
+      const db = getFirestore();
+      const postRef = doc(db, "post-details", postId);
+      // Update the likes count in Firestore
+      await updateDoc(postRef, { likes: increment(1) });
+  
+      // Add the postId to the likedPosts state to prevent multiple likes
+      setLikedPosts([...likedPosts, postId]);
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
+  };
+
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
-  // const [imgUrls, setImgUrls] = useState([]);
-
-  // const handleImgChange = async (e) => {
-  //   const file = e.target.files[0];
-
-  //   if (file && file.type.startsWith("image/")) {
-  //     const imgRef = ref(storage, `images/${file.name}`); // Upload to 'images' folder with file name
-  //     try {
-  //       const uploadTask = await uploadBytes(imgRef, file);
-  //       // const timestamp = new Date().toISOString(); 
-  //       // await uploadBytes(imgRef, file); // Upload image file to Firebase Storage
-  //       const downloadUrl = await getDownloadURL(imgRef);
-
-  //       // Save image details to Firestore including the timestamp
-  //       const db = getFirestore();
-  //       const postsCollection = collection(db, "post-details");
-  //       await addDoc(postsCollection, {
-  //         content: text,
-  //         imageUrl: downloadUrl,
-  //         timestamp: new Date().toISOString(),
-  //         author: "anonymous",
-  //       });
-
-  //       console.log("Image uploaded successfully.");
-  //       setText("");
-  //       loadImages(); // Reload images after upload
-  //     } catch (error) {
-  //       console.error("Error uploading image:", error);
-  //     }
-  //   } else {
-  //     alert("Please select a valid image file.");
-  //   }
-  // };
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        setCurrentUser(user);
+      } else {
+        // User is signed out
+        navigate("/Login");
+      }
+    });
+  }, [navigate]);
 
   const handleLogoutClick = () => {
-    navigate("/SignIn");
+    navigate("/Login");
   };
 
   const handleDeletePost = async (postId) => {
-    const db = getFirestore();
-    const postRef = doc(db, "post-details", postId);
-
     try {
-      // Mark the post as deleted in the database
-      await updateDoc(postRef, {
-        deleted: true,
-      });
-
-      // Reload posts
-      loadPosts();
+      const db = getFirestore();
+      const postRef = doc(db, "post-details", postId);
+      await deleteDoc(postRef);
+      setPosts(posts.filter((post) => post.id !== postId)); // Remove the post from state
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
 
-  const handleImgChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImage(file);
-    } else {
-      alert("Please select a valid image file.");
-    }
+  const handleEditPost = (postId, content, imageUrl) => {
+    setText(content);
+    setImage(imageUrl); // Set image URL for editing
+    setEditedPostId(postId); // Track the edited post ID
+  };
+
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
 
   const loadPosts = async () => {
@@ -121,105 +154,62 @@ function HomePage() {
   };
 
   useEffect(() => {
-
     loadPosts();
   }, []);
 
-  
-
-  // const handleVideo = (event) => {
-  //   const file = event.target.files[0];
-  //   setSelectedFile(file);
-  //   setPostType("video"); // Set post type to video
-  // };
-
-  // const handlePostSubmit = async (event) => {
-  //   event.preventDefault();
-
-  //   if (!text.trim() && !selectedFile) return;
-
-  //   if (!image || !text.trim()) {
-  //     alert("Please select an image and enter text.");
-  //     return;
-  //   }
-  //   const db = getFirestore();
-
-  //   try {
-  //     const postsCollection = collection(db, "post-details");
-  //     const newPostRef = await addDoc(postsCollection, {
-  //       content: text,
-  //       timestamp: new Date().toISOString(),
-  //       author: "anonymous",
-  //     });
-
-  //     const newPost = {
-  //       id: newPostRef.id,
-  //       content: text,
-  //       timestamp: new Date().toISOString(),
-  //       author: "anonymous",
-  //     };
-
-  //     setPosts([newPost, ...posts]);
-  //     setText("");
-  //     setSelectedFile(null);
-  //   } catch (error) {
-  //     console.error("Error adding document: ", error);
-  //   }
-  // };
-
-
   const handlePostSubmit = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (!image) {
-    // If no image is selected, validate text input
-    if (!text.trim()) {
-      alert("Please enter some text before posting.");
-      return;
-    }
-  } else {
-    // If an image is selected, ensure text input is provided
-    if (!text.trim()) {
-      alert("Please enter some text to accompany the image.");
-      return;
-    }
-  }
-
-  try {
-    const db = getFirestore();
-    const postsCollection = collection(db, "post-details");
-
-    // Prepare post data
-    const postData = {
-      timestamp: new Date().toISOString(),
-      author: "anonymous",
-    };
-
-    if (image) {
-      const imgRef = ref(storage, `images/${image.name}`);
-      await uploadBytes(imgRef, image);
-      const downloadUrl = await getDownloadURL(imgRef);
-      postData.imageUrl = downloadUrl;
+    if (!image) {
+      // If no image is selected, validate text input
+      if (!text.trim()) {
+        alert("Please enter some text before posting.");
+        return;
+      }
+    } else {
+      // If an image is selected, ensure text input is provided
+      if (!text.trim()) {
+        alert("Please enter some text to accompany the image.");
+        return;
+      }
     }
 
-    if (text.trim()) {
-      postData.content = text;
+    try {
+      const db = getFirestore();
+      const postsCollection = collection(db, "post-details");
+
+      // Prepare post data
+      const postData = {
+        timestamp: new Date().toISOString(),
+        author: "anonymous",
+        userId: currentUser.uid, // Save the current user's ID
+      };
+
+      if (image) {
+        const imgRef = ref(storage, `images/${image.name}`);
+        await uploadBytes(imgRef, image);
+        const downloadUrl = await getDownloadURL(imgRef);
+        postData.imageUrl = downloadUrl;
+      }
+
+      if (text.trim()) {
+        postData.content = text;
+      }
+
+      // Add post to Firestore
+      await addDoc(postsCollection, postData);
+      console.log("Post added successfully.");
+
+      // Clear input fields after successful post
+      setImage(null);
+      setText("");
+
+      // Reload posts
+      loadPosts();
+    } catch (error) {
+      console.error("Error adding post:", error);
     }
-
-    // Add post to Firestore
-    await addDoc(postsCollection, postData);
-    console.log("Post added successfully.");
-
-    // Clear input fields after successful post
-    setImage(null);
-    setText("");
-    
-    // Reload posts
-    loadPosts();
-  } catch (error) {
-    console.error("Error adding post:", error);
-  }
-};
+  };
 
   return (
     <div className="combined-component">
@@ -232,19 +222,18 @@ function HomePage() {
               style={{ height: "50px", padding: "1rem" }}
             />
           </div>
+          <p>Welcome {currentUser ? currentUser.displayName : "User"}</p>
           <div className="HomePage">
-            {/* <AiOutlineSearch style={{ height: "1rem" }} /> */}
-            {/* <input placeholder="HomePage News" type="HomePage" /> */}
+            {/* <AiOutlineSearch style={{ height: "1rem" }} />
+            <input placeholder="HomePage News" type="HomePage" /> */}
           </div>
           <div className="middle-header"></div>
           <div className="svg-icons">
             <div className="plus">
-              <Link to="/HomePage">
               <FaPlusCircle fontSize="1.5rem" />
-              </Link>
             </div>
             <div className="plus">
-              <Link to="/chat">
+              <Link to="/Home">
                 <FaFacebookMessenger href="" fontSize="1.5rem" />
               </Link>
             </div>
@@ -259,48 +248,22 @@ function HomePage() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="What's on your mind?"
+          placeholder={`What's on your mind, ${
+            currentUser ? currentUser.displayName : "User"
+          }?`}
+          w
         />
-        <input
-          id="photo-upload"
-          type="file"
-          onChange={handleImgChange}
-          accept="image/*"
-          style={{ display: "none" }}
-        />
-        
         <div className="buttons">
           <button>
-            {/* <label htmlFor="photo-upload" className="custom-file-upload">
-              <input
-                id="photo-upload"
-                type="file"
-                onChange={handleImgChange}
-                style={{ display: "none" }}
-              />
-              Photo
-            </label> */}
             <label htmlFor="photo-upload" className="custom-file-upload">
-          Upload Image
-        </label>
-        {image && (
-          <div className="image-preview">
-            <img src={URL.createObjectURL(image)} alt="Preview" />
-          </div>
-        )}
-          </button>
-          {/* <button>
-            <label htmlFor="video-upload" className="custom-file-upload">
-              <input
-                id="video-upload"
-                type="file"
-                onChange={handleImgChange}
-                accept="video/*"
-                style={{ display: "none" }}
-              />
-              Video
+              Upload Image
             </label>
-          </button> */}
+            {image && (
+              <div className="image-preview">
+                <img src={URL.createObjectURL(image)} alt="Preview" />
+              </div>
+            )}
+          </button>
           <button type="submit" onClick={handlePostSubmit}>
             Post
           </button>
@@ -330,20 +293,6 @@ function HomePage() {
             style={{ height: "auto", width: "100%" }}
           />
         </div>
-        <div className="Comment">
-          <div className="Like">
-            <FaRegThumbsUp color="grey" />
-            Like
-          </div>
-          <div className="Like">
-            <FaCommentAlt color="grey" />
-            Comment
-          </div>
-          <div className="Like">
-            <FaRegShareSquare color="grey" />
-            Share
-          </div>
-        </div>
       </div>
       <br />
 
@@ -352,25 +301,45 @@ function HomePage() {
         <div key={post.id} className="Posted">
           <div className="post">
             <div className="poster">
-            <div className="Simplilearn">
-              <img
-                src="src/assets/homepage/Pink and Black Modern Initials Logo Design.png"
-                alt="Img"
-                style={{ height: "40px", width: "40px", borderRadius: "50%" }}
-              />
-              <span>{post.author}</span>
-              <br></br>
-             
-     
-    
-            </div>
-            <span className="caption">{new Date(post.timestamp).toLocaleString()}</span>
+              <div className="Simplilearn">
+                <img
+                  src="src/assets/homepage/Pink and Black Modern Initials Logo Design.png"
+                  alt="Img"
+                  style={{ height: "40px", width: "40px", borderRadius: "50%" }}
+                />
+                <span>{post.author}</span>
+                <br></br>
+              </div>
+              <span className="caption">
+                {new Date(post.timestamp).toLocaleString()}
+              </span>
+              {/* Display edit and delete options only if the current user is the author of the post */}
+              {currentUser && post.userId === currentUser.uid && (
+                <div className="dropdown">
+                  <button onClick={toggleDropdown}>More</button>
+                  {isOpen && (
+                    <ul className="dropdown-menu">
+                      <li
+                        className="dropdown"
+                        onClick={() => handleEditPost(post.id, post.content)}
+                      >
+                        Edit
+                      </li>
+                      <br></br>
+                      <li
+                        className="dropdown"
+                        onClick={() => handleDeletePost(post.id)}
+                      >
+                        {" "}
+                        Delete
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              )}
             </div>
 
-            <button onClick={() => handleDeletePost(post.id)}>Delete</button>
             <div className="caption">{post.content}</div>
-            
-            
 
             {post.imageUrl && (
               <img
@@ -381,10 +350,15 @@ function HomePage() {
             )}
 
             <div className="Comment">
-              <div className="Like">
-                <FaRegThumbsUp color="grey" />
+              <div className="Like" onClick={() => handleLike(post.id)}>
+                {likedPosts.includes(post.id) ? (
+                  <FaRegThumbsUp color="blue" />
+                ) : (
+                  <FaRegThumbsUp color="grey" />
+                )}
                 Like
               </div>
+
               <div className="Like">
                 <FaCommentAlt color="grey" />
                 Comment
