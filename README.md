@@ -23,3 +23,5 @@ Go to the Q&A section and post a question anonymously.
 Navigate to the Resources section to upload and share important documents and courses.
 <li>Private Chat:
 Use the chat feature to start a one-on-one conversation with a senior or peer for personal guidance.
+
+### Thank you!
