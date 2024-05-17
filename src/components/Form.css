@@ -1,0 +1,185 @@
+body,html{
+	background: linear-gradient(to bottom right, #ffffff, #dacdbb, #ebbb7b);
+
+}
+.main-container {
+	background-size: cover;
+	height: 740px;
+	background-repeat: no-repeat;
+	overflow-y: hidden;
+	backdrop-filter: blur(2px); 
+	 
+  }
+  .logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 20px;
+  }
+  
+  .logo img {
+	height: 50px;
+	padding: 0;
+  }
+  
+  .logo-heading {
+	text-align: center;
+	font-size: 2.5rem;
+	color: #000;
+	margin-top: 10px;
+  }
+  
+  .sub-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+  }
+  
+  .form-container {
+	width: 320px;
+	border-radius: 0.75rem;
+	background-color: transparent;
+	border: 4px solid #111827;
+	padding: 2rem;
+	margin-top: 60px;
+  }
+  
+  .title {
+	text-align: center;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	font-weight: 700;
+  }
+  
+  .form {
+	margin-top: 1.5rem;
+  }
+  
+  .input-group {
+	margin-top: 0.25rem;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	width: 290px;
+  }
+  
+  .input-group label {
+	display: block;
+	margin-bottom: 4px;
+	color: #000; 
+  }
+  
+  .input-group input {
+	width: 100%;
+	border-radius: 0.375rem;
+	border: 2px solid rgba(55, 65, 81, 1);
+	outline: 0;
+	padding: 0.75rem 1rem;
+	color: #000;
+  }
+  
+  .input-group input:focus {
+	border-color: rgb(32, 2, 121);
+	border-radius: 4px;
+  }
+  
+  /* Radio button styles */
+  .radio-options {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 8px; 
+  }
+  
+  .radio-label {
+	display: flex;
+	align-items:normal;
+	margin-right: 20px; 
+	color: #000; 
+  }
+  
+  .radio-label input {
+	margin-right: 5px; 
+  }
+  
+  .signin a,
+  .signup a {
+	color: #000;
+	text-decoration: none;
+	font-size: 14px;
+	margin-left: 4px;
+  }
+  
+  .signup a:hover,
+  .signin a:hover {
+	text-decoration: underline rgb(32, 2, 121);
+	cursor: pointer;
+  }
+  
+  .sign button {
+	display: block;
+	width: 100%;
+	background-color: transparent;
+	padding: 0.75rem;
+	text-align: center;
+	border: 4px solid rgb(32, 2, 121);
+	border-radius: 0.375rem;
+	font-weight: 600;
+	margin-top: 12px;
+	cursor: pointer;
+  }
+  
+  .sign a {
+	text-decoration: none;
+	color: black;
+  }
+  
+  .social-message {
+	display: flex;
+	align-items: center;
+	padding-top: 1rem;
+  }
+  
+  .line {
+	height: 1px;
+	flex: 1 1 0%;
+	background-color: rgba(55, 65, 81, 1);
+  }
+  
+  .social-message .message {
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	color: #000;
+  }
+  
+  .social-icons {
+	display: flex;
+	justify-content: center;
+	color: #000;
+  }
+  
+  .social-icons .icon {
+	border-radius: 0.125rem;
+	padding: 0.75rem;
+	border: none;
+	background-color: transparent;
+	margin-left: 8px;
+	cursor: pointer;
+  }
+  
+  .social-icons .icon svg {
+	height: 1.25rem;
+	width: 1.25rem;
+	fill: #000;
+  }
+  
+  .signup,
+  .signin {
+	text-align: center;
+	font-size: 0.75rem;
+	line-height: 1rem;
+	color: #000;
+	margin-top: 1rem;
+  }
+  

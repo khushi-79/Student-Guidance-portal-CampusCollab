@@ -1,0 +1,63 @@
+.user-management-container {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.user-management-header {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.user-list {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 50px 1fr 2fr 100px 100px; /* Adjust column sizes as needed */
+    gap: 10px;
+}
+
+.user-item {
+    background-color: #fff;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 50px 1fr 2fr 100px 100px; /* Must match the parent grid */
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.user-item > div, .user-item > span, .user-item > button {
+    justify-content: center;
+    display: flex;
+}
+
+.user-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-small {
+    padding: 5px 10px;
+    margin-left: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
