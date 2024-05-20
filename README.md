@@ -24,4 +24,8 @@ Navigate to the Resources section to upload and share important documents and co
 <li>Private Chat:
 Use the chat feature to start a one-on-one conversation with a senior or peer for personal guidance.
 
+### Contributors
+<a href="https://github.com/khushi-79"> Khushi Pandya </a><br>
+<a href="https://github.com/lubaina5277"> Lubaina Bharmal </a>
+
 ### Thank you!
